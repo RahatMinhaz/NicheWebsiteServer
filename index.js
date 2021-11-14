@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors');
 require('dotenv').config();
 const {MongoClient} = require('mongodb');
+const ObjectId = require("mongodb").ObjectId;
 
 
 const port = process.env.PORT || 5000;
@@ -25,6 +26,11 @@ async function run() {
             const wheels = await cursor.toArray();
             res.send(wheels);
         });
+        app.get('/carscollection/:id', async (req,res) =>{
+            const result = await carCollection.find({_id: ObjectId( req.params.id )})
+            .toArray();
+            res.send(result[0]);
+        })
         app.get('/carscollection2', async(req,res) =>{
             const cursor = anotherCarCollection.find({});
             const secondWheels = await cursor.toArray();
