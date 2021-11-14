@@ -20,6 +20,13 @@ async function run() {
         const database = client.db('car_dealership');
         const carCollection = database.collection('carscollection');
         const anotherCarCollection = database.collection('carscollection2');
+        const userInfo = database.collection('usersinfo');
+
+        app.post('/usersinfo', async(req,res) =>{
+            const info = req.body;
+            const result = await userInfo.insertOne(info);
+            res.json(result)
+        })
 
         app.get('/carscollection', async(req,res) =>{
             const cursor = carCollection.find({});
