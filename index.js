@@ -37,9 +37,9 @@ async function run() {
             res.send(secondWheels);
         });
         app.get('/carscollection2/:id', async(req,res) =>{
-            const result = await anotherCarCollection.find({_id: ObjectId( req.params.id )})
+            const result2 = await anotherCarCollection.find({_id: ObjectId( req.params.id )})
             .toArray();
-            res.send(result[0]);
+            res.send(result2[0]);
         })
     }
     finally{
