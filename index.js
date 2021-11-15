@@ -22,6 +22,14 @@ async function run() {
         const anotherCarCollection = database.collection('carscollection2');
         const userInfo = database.collection('usersinfo');
 
+        app.get('/usersinfo', async(req,res) =>{
+            const email = req.query.email;
+            const query = {email:email}
+            const cursor = userInfo.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders);
+        })
+
         app.post('/usersinfo', async(req,res) =>{
             const info = req.body;
             const result = await userInfo.insertOne(info);
