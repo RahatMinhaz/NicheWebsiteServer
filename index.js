@@ -16,13 +16,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try{
+        // Creating Database
         await client.connect();
         const database = client.db('car_dealership');
         const carCollection = database.collection('carscollection');
         const anotherCarCollection = database.collection('carscollection2');
         const userInfo = database.collection('usersinfo');
         const usersCollection = database.collection('users');
-
+        // Getting User info
         app.get('/usersinfo', async(req,res) =>{
             const email = req.query.email;
             const query = {email: email}
@@ -30,18 +31,20 @@ async function run() {
             const orders = await cursor.toArray();
             res.json(orders);
         })
-
+        // Sending info to Database
         app.post('/usersinfo', async(req,res) =>{
             const info = req.body;
             const result = await userInfo.insertOne(info);
             res.json(result)
         })
 
+        // car api
         app.get('/carscollection', async(req,res) =>{
             const cursor = carCollection.find({});
             const wheels = await cursor.toArray();
             res.send(wheels);
         });
+        // getting single api
         app.get('/carscollection/:id', async (req,res) =>{
             const result = await carCollection.find({_id: ObjectId( req.params.id )})
             .toArray();
@@ -57,7 +60,7 @@ async function run() {
             .toArray();
             res.send(result[0]);
         });
-
+            // sending admin confirmation
         app.get('/users/:email', async(req,res) =>{
             const email = req.params.email;
             const query={email:email};
@@ -74,7 +77,7 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.json(result);
         });
-
+            // Upserting user
         app.put('/users', async(req,res) =>{
             const user = req.body;
             const filter = {email:user.email};
@@ -90,7 +93,7 @@ async function run() {
             const updateDoc = {$set:{role: 'admin'}};
             const result = await usersCollection.updateOne(filter,updateDoc);
             res.json(result);
-        })
+        });
     }
     finally{
 
