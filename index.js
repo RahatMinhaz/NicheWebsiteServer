@@ -21,10 +21,11 @@ async function run() {
         const carCollection = database.collection('carscollection');
         const anotherCarCollection = database.collection('carscollection2');
         const userInfo = database.collection('usersinfo');
+        const usersCollection = database.collection('users');
 
         app.get('/usersinfo', async(req,res) =>{
             const email = req.query.email;
-            const query = {email:email}
+            const query = {email: email}
             const cursor = userInfo.find(query);
             const orders = await cursor.toArray();
             res.json(orders);
@@ -55,7 +56,13 @@ async function run() {
             const result = await anotherCarCollection.find({_id: ObjectId( req.params.id )})
             .toArray();
             res.send(result[0]);
-        })
+        });
+
+        app.post('/users', async(req,res) =>{
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        });
     }
     finally{
 
