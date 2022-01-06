@@ -40,7 +40,7 @@ async function run() {
         });
 
         // Managing all orders data
-        app.get('/usersinfo2', async(req,res) =>{
+        app.get('/usersinfo', async(req,res) =>{
             const cursor = userInfo2.find({});
             const orders2 = await cursor.toArray();
             res.send(orders2);
@@ -48,7 +48,7 @@ async function run() {
 
         // Posting all ordered items on UI
 
-        app.post('/usersinfo2', async(req,res) =>{
+        app.post('/usersinfo', async(req,res) =>{
             const info2 = req.body;
             const result = await userInfo2.insertOne(info2);
             res.json(result);
@@ -56,7 +56,7 @@ async function run() {
 
         // Deleting an order
 
-        app.delete('/usersinfo2/:id', async(req,res) =>{
+        app.delete('/usersinfo/:id', async(req,res) =>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await userInfo2.deleteOne(query);
