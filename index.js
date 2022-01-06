@@ -22,6 +22,7 @@ async function run() {
         const carCollection = database.collection('carscollection');
         const anotherCarCollection = database.collection('carscollection2');
         const userInfo = database.collection('usersinfo');
+        const userInfo2 = database.collection('usersinfo2');
         const usersCollection = database.collection('users');
         // Getting User info
         app.get('/usersinfo', async(req,res) =>{
@@ -30,13 +31,37 @@ async function run() {
             const cursor = userInfo.find(query);
             const orders = await cursor.toArray();
             res.json(orders);
-        })
+        });
         // Sending info to Database
         app.post('/usersinfo', async(req,res) =>{
             const info = req.body;
             const result = await userInfo.insertOne(info);
             res.json(result)
-        })
+        });
+
+        // Managing all orders data
+        app.get('/usersinfo2', async(req,res) =>{
+            const cursor = userInfo2.find({});
+            const orders2 = await cursor.toArray();
+            res.send(orders2);
+        });
+
+        // Posting all ordered items on UI
+
+        app.post('/usersinfo2', async(req,res) =>{
+            const info2 = req.body;
+            const result = await userInfo2.insertOne(info2);
+            res.json(result);
+        });
+
+        // Deleting an order
+
+        app.delete('/usersinfo2/:id', async(req,res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await userInfo2.deleteOne(query);
+            res.json(result);
+        });
 
         // car api
         app.get('/carscollection', async(req,res) =>{
@@ -60,6 +85,35 @@ async function run() {
             .toArray();
             res.send(result[0]);
         });
+
+        // Adding a new product on home page
+        app.post('/carscollection2', async(req,res) =>{
+            const newItem = req.body;
+            const result = await anotherCarCollection.insertOne(newItem);
+            res.json(result);
+        });
+
+        app.post('/carscollection', async(req,res) =>{
+            const newItem = req.body;
+            const result = await carCollection.insertOne(newItem);
+            res.json(result);
+        });
+
+        app.delete('/carscollection2/:id', async(req,res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await anotherCarCollection.deleteOne(query);
+            res.json(result);
+        });
+
+        app.delete('/carscollection2/:id', async(req,res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await carCollection.deleteOne(query);
+            res.json(result);
+        });
+
+
             // sending admin confirmation
         app.get('/users/:email', async(req,res) =>{
             const email = req.params.email;
